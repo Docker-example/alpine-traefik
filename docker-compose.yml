@@ -1,0 +1,96 @@
+version: '3'
+
+services:
+  traefik:
+    image: perriea/alpine-traefik:3.7
+    build: ./
+    hostname: traefik
+    labels:
+      - "traefik.enable=false"
+    depends_on:
+      - wordpress
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 1
+        window: 120s
+      resources:
+        limits:
+          cpus: '20.000'
+          memory: 512M
+      placement:
+        constraints: 
+          - node.role == manager
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - public
+      - app-private
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+
+  mysql:
+    image: perriea/alpine-mysql:3.7
+    hostname: mysql
+    labels:
+      - traefik.enable=false
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 1
+        window: 120s
+      resources:
+        limits:
+          cpus: '10.000'
+          memory: 512M
+    networks:
+      - db-private
+    volumes:
+      - db_data:/var/lib/mysql
+
+  wordpress:
+    image: perriea/alpine-wordpress:3.7
+    hostname: wordpress
+    labels:
+      - traefik.enable=true
+      - traefik.backend=blog
+      - traefik.frontend.rule=Host:blog.example.com
+      - traefik.docker.network=app-private
+      - traefik.port=80
+    depends_on:
+      - mysql
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 1
+        window: 120s
+      resources:
+        limits:
+          cpus: '10.000'
+          memory: 256M
+    networks:
+      - app-private
+      - db-private
+    volumes:
+      - wordpress_data:/var/www/localhost/htdocs
+
+volumes:
+  db_data: {}
+  wordpress_data: {}
+  traefik_data: {}
+
+networks:
+  public:
+    driver: overlay
+  app-private:
+    driver: overlay
+  db-private:
+    driver: overlay
