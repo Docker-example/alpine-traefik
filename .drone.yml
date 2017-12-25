@@ -1,7 +1,7 @@
 pipeline:  
   publish:
     image: plugins/docker
-    repo: perriea/alpine-telegraf
+    repo: perriea/alpine-traefik
     dockerfile: Dockerfile
     secrets: [ docker_username, docker_password ]
     tag:
