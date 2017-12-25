@@ -3,7 +3,6 @@ version: '3'
 services:
   traefik:
     image: perriea/alpine-traefik:3.7
-    build: ./
     hostname: traefik
     labels:
       - "traefik.enable=false"
@@ -20,9 +19,6 @@ services:
         limits:
           cpus: '20.000'
           memory: 512M
-      placement:
-        constraints: 
-          - node.role == manager
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
