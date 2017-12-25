@@ -84,9 +84,6 @@ volumes:
   traefik_data: {}
 
 networks:
-  public:
-    driver: overlay
-  app-private:
-    driver: overlay
-  db-private:
-    driver: overlay
+  public: {}
+  app-private: {}
+  db-private: {}
