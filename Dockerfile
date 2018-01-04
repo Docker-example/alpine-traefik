@@ -8,6 +8,7 @@ ENV TIMEZONE Europe/Paris
 ENV TRAEFIK_VERSION 1.4.5
 
 # Installing packages
+RUN apk add 
 RUN apk add --no-cache su-exec
 
 WORKDIR /scripts

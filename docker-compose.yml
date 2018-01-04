@@ -1,8 +1,9 @@
-version: '3'
+version: '3.3'
 
 services:
   traefik:
     image: perriea/alpine-traefik:3.7
+    build: ./
     hostname: traefik
     labels:
       - "traefik.enable=false"
@@ -19,11 +20,22 @@ services:
         limits:
           cpus: '20.000'
           memory: 512M
+      placement:
+        constraints:
+        - node.role == manager
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    secrets:
+      - source: traefik_cert
+        target: /etc/traefik/tls/cert.pem
+        uid: "0"
+        mode: 400
+      - source: traefik_key
+        target: /etc/traefik/tls/key.pem
+        uid: "0"
+        mode: 400
     networks:
-      - public
-      - app-private
+      - proxy
     ports:
       - "80:80"
       - "443:443"
@@ -46,7 +58,7 @@ services:
           cpus: '10.000'
           memory: 512M
     networks:
-      - db-private
+      - internal
     volumes:
       - db_data:/var/lib/mysql
 
@@ -57,7 +69,7 @@ services:
       - traefik.enable=true
       - traefik.backend=blog
       - traefik.frontend.rule=Host:blog.example.com
-      - traefik.docker.network=app-private
+      - traefik.docker.network=proxy
       - traefik.port=80
     depends_on:
       - mysql
@@ -73,10 +85,16 @@ services:
           cpus: '10.000'
           memory: 256M
     networks:
-      - app-private
-      - db-private
+      - proxy
+      - internal
     volumes:
       - wordpress_data:/var/www/localhost/htdocs
+
+secrets:
+  traefik_cert:
+    file: ./files/tls/cert.pem
+  traefik_key:
+    file: ./files/tls/key.pem
 
 volumes:
   db_data: {}
@@ -84,6 +102,7 @@ volumes:
   traefik_data: {}
 
 networks:
-  public: {}
-  app-private: {}
-  db-private: {}
+  proxy:
+    external:
+      name: proxy
+  internal: {}

@@ -1,43 +1,65 @@
-defaultEntryPoints = ["http"]
+################################################################
+# Global configuration
+################################################################
+
+# Access logs file
+accessLogsFile = "/dev/stdout"
+
+# Log level
+logLevel = "DEBUG"
+
+# Limit connexion peer host
+MaxIdleConnsPerHost = 200
+
+
+################################################################
+# Entrypoints to be used by frontends that do not specify any entrypoint.
+################################################################
+
+defaultEntryPoints = ["http", "https"]
 
 # https://www.askapache.com/online-tools/htpasswd-generator/
 [web]
 address = ":8080"
 [web.auth.basic]
 users = ["admin:$apr1$3ybtl8zp$GXOO2GpgRJAU5MRTQGQQ.1"]
+[web.statistics]
+RecentErrors = 20
 
 [entryPoints]
   [entryPoints.http]
   address = ":80"
-    # [entryPoints.http.redirect]
-    # entryPoint = "https"
-    # [entryPoints.https]
-    # address = ":443"
-    #     [entryPoints.https.tls]
-    #         [[entryPoints.https.tls.certificates]]
-    #         certFile = "examples/traefik.crt"
-    #         keyFile = "examples/traefik.key"
+    [entryPoints.http.redirect]
+      regex = "^http://(.*)"
+      replacement = "https://$1"
+      entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+      [[entryPoints.https.tls.certificates]]
+      CertFile = "/etc/traefik/tls/cert.pem"
+      KeyFile = "/etc/traefik/tls/key.pem"
 
-[frontends]
-  [frontends.website]
-  backend = "blog"
-  [frontends.website.routes.website]
-  rule = "Host: blog.example.com"
+# [frontends]
+#   [frontends.website]
+#   backend = "blog"
+#   [frontends.website.routes.website]
+#   rule = "Host: blog.example.com"
   
-[acme]  
-email = "admin@aurelienperrier.com"  
-storage = "acme.json"
-dnsProvider = "cloudflare"
-delayDontCheckDNS = 0
-caServer = "http://172.18.0.1:4000/directory"
-entryPoint = "https"
-[[acme.domains]]
-  main = "aurelienperrier.com"
-  sans = ["drone.aurelienperrier.com"]
+# [acme]  
+# email = "admin@aurelienperrier.com"  
+# storage = "acme.json"
+# dnsProvider = "cloudflare"
+# delayDontCheckDNS = 0
+# caServer = "http://172.18.0.1:4000/directory"
+# entryPoint = "https"
+# [[acme.domains]]
+#   main = "aurelienperrier.com"
+#   sans = ["drone.aurelienperrier.com"]
 
 [docker]
 endpoint = "unix:///var/run/docker.sock"
 domain = "docker.localhost"
 watch = true
 exposedbydefault = false
-# swarmmode = true
+swarmmode = true
