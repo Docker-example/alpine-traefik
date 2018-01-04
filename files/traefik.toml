@@ -40,23 +40,6 @@ RecentErrors = 20
       CertFile = "/etc/traefik/tls/cert.pem"
       KeyFile = "/etc/traefik/tls/key.pem"
 
-# [frontends]
-#   [frontends.website]
-#   backend = "blog"
-#   [frontends.website.routes.website]
-#   rule = "Host: blog.example.com"
-  
-# [acme]  
-# email = "admin@aurelienperrier.com"  
-# storage = "acme.json"
-# dnsProvider = "cloudflare"
-# delayDontCheckDNS = 0
-# caServer = "http://172.18.0.1:4000/directory"
-# entryPoint = "https"
-# [[acme.domains]]
-#   main = "aurelienperrier.com"
-#   sans = ["drone.aurelienperrier.com"]
-
 [docker]
 endpoint = "unix:///var/run/docker.sock"
 domain = "docker.localhost"
