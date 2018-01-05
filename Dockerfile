@@ -14,14 +14,9 @@ WORKDIR /scripts
 
 ADD https://github.com/containous/traefik/releases/download/v${TRAEFIK_VERSION}/traefik_linux-amd64 /usr/bin/traefik
 RUN addgroup traefik && \
-    adduser -s /bin/false -G traefik -S -D traefik
-
-# Coping config & scripts
-COPY ./files/ /etc/traefik/
-COPY ./scripts ./
-
-RUN chmod +x /usr/bin/traefik
+    adduser -s /bin/false -G traefik -S -D traefik && \
+    chmod +x /usr/bin/traefik
 
 EXPOSE 80 443 8080
 
-ENTRYPOINT [ "./start.sh" ]
+ENTRYPOINT [ "traefik" ]
