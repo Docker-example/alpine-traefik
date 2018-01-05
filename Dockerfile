@@ -5,7 +5,7 @@ LABEL APP="traefik"
 LABEL APP_REPOSITORY="https://github.com/containous/traefik/releases"
 
 ENV TIMEZONE Europe/Paris
-ENV TRAEFIK_VERSION 1.4.5
+ENV TRAEFIK_VERSION 1.4.6
 
 # Installing packages
 RUN apk add 
