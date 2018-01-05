@@ -11,3 +11,17 @@ pipeline:
       branch: master
       event: 
         - push
+
+  publish:
+    image: plugins/docker
+    repo: perriea/alpine-traefik
+    dockerfile: Dockerfile
+    secrets: [ docker_username, docker_password ]
+    tag:
+      - dev
+    when:
+      branch: 
+        - feature/*
+        - dev
+      event: 
+        - push
