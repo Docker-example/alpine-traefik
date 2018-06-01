@@ -1,14 +1,11 @@
 FROM alpine:3.7
 
-LABEL MAINTAINER="Aurelien PERRIER <a.perrier89@gmail.com>"
-LABEL APP="traefik"
-LABEL APP_REPOSITORY="https://github.com/containous/traefik/releases"
+LABEL MAINTAINER "Aurelien PERRIER <a.perrier89@gmail.com>"
+LABEL APP "traefik"
+LABEL APP_REPOSITORY "https://github.com/containous/traefik/releases"
 
 ENV TIMEZONE Europe/Paris
-ENV TRAEFIK_VERSION 1.4.5
-
-# Installing packages
-RUN apk add --no-cache su-exec
+ENV TRAEFIK_VERSION 1.6.2
 
 WORKDIR /scripts
 
