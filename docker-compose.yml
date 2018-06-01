@@ -2,7 +2,7 @@ version: '3'
 
 services:
   traefik:
-    image: perriea/alpine-traefik:3.7
+    image: quay.io/perriea/alpine-traefik:1.0
     hostname: traefik
     labels:
       - "traefik.enable=false"
