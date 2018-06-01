@@ -1,6 +1,6 @@
 defaultEntryPoints = ["http"]
 
-# https://www.askapache.com/online-tools/htpasswd-generator/
+# Generate Hash: https://www.askapache.com/online-tools/htpasswd-generator/
 [web]
 address = ":8080"
 [web.auth.basic]
@@ -17,23 +17,17 @@ users = ["admin:$apr1$3ybtl8zp$GXOO2GpgRJAU5MRTQGQQ.1"]
     #         [[entryPoints.https.tls.certificates]]
     #         certFile = "examples/traefik.crt"
     #         keyFile = "examples/traefik.key"
-
-[frontends]
-  [frontends.website]
-  backend = "blog"
-  [frontends.website.routes.website]
-  rule = "Host: blog.example.com"
   
-[acme]  
-email = "admin@aurelienperrier.com"  
-storage = "acme.json"
-dnsProvider = "cloudflare"
-delayDontCheckDNS = 0
-caServer = "http://172.18.0.1:4000/directory"
-entryPoint = "https"
-[[acme.domains]]
-  main = "aurelienperrier.com"
-  sans = ["drone.aurelienperrier.com"]
+# [acme]  
+# email = "admin@aurelienperrier.com"  
+# storage = "acme.json"
+# dnsProvider = "cloudflare"
+# delayDontCheckDNS = 0
+# caServer = "http://172.18.0.1:4000/directory"
+# entryPoint = "https"
+# [[acme.domains]]
+#   main = "aurelienperrier.com"
+#   sans = ["drone.aurelienperrier.com"]
 
 [docker]
 endpoint = "unix:///var/run/docker.sock"
