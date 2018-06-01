@@ -30,7 +30,7 @@ services:
       - "8080:8080"
 
   mysql:
-    image: perriea/alpine-mysql:3.7
+    image: quay.io/perriea/alpine-mysql:1.0
     hostname: mysql
     labels:
       - traefik.enable=false
@@ -51,7 +51,7 @@ services:
       - db_data:/var/lib/mysql
 
   wordpress:
-    image: perriea/alpine-wordpress:3.7
+    image: quay.io/perriea/alpine-wordpress:1.0
     hostname: wordpress
     labels:
       - traefik.enable=true
